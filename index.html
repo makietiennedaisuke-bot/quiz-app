@@ -1,0 +1,2052 @@
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@500;700&family=Zen+Kaku+Gothic+New:wght@400;500;700;900&family=JetBrains+Mono:wght@400;600;700&display=swap');
+
+  .qz-root {
+    --bg-top: #DCEFE7;
+    --bg-mid: #ECF0DE;
+    --bg-bot: #E8E2C9;
+    --paper: #FBFBF6;
+    --ink: #20261F;
+    --ink-soft: #4F5A4A;
+    --ink-faint: #8B9580;
+    --line: #D7DECF;
+    --primary: #2E6F5C;
+    --primary-soft: #4C8E78;
+    --pencil: #C98A3B;
+    --red: #B23A2A;
+    --red-soft: rgba(178,58,42,0.10);
+    --eco: #3F7A5C;
+    --radius: 16px;
+    --shadow: 0 18px 40px -22px rgba(32,38,31,0.4), 0 2px 8px rgba(32,38,31,0.08);
+    position: relative;
+    font-family: 'Zen Kaku Gothic New', sans-serif;
+    color: var(--ink);
+    background: linear-gradient(180deg, var(--bg-top) 0%, var(--bg-mid) 55%, var(--bg-bot) 100%);
+    min-height: 100vh;
+    padding: 48px 18px 80px;
+    box-sizing: border-box;
+    overflow: hidden;
+  }
+  .qz-root *, .qz-root *::before, .qz-root *::after { box-sizing: border-box; }
+  .qz-bg-pattern { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 0; pointer-events: none; }
+  .qz-bg-pattern .eco-mol circle { fill: none; stroke: var(--eco); stroke-width: 1.4; opacity: 0.18; }
+  .qz-bg-pattern .eco-mol line { stroke: var(--eco); stroke-width: 1.2; opacity: 0.18; }
+  .qz-bg-pattern .eco-leaf path { fill: var(--eco); opacity: 0.11; }
+  .qz-bg-pattern .eco-leaf line { stroke: var(--eco); stroke-width: 1; opacity: 0.15; }
+  .qz-wrap { position: relative; z-index: 1; max-width: 640px; margin: 0 auto; }
+  .hidden { display: none !important; }
+
+  /* ---------- Header / brand ---------- */
+  .qz-eyebrow {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.72rem;
+    letter-spacing: 0.18em;
+    color: var(--ink-faint);
+    text-transform: uppercase;
+    margin-bottom: 10px;
+  }
+  .qz-title {
+    font-family: 'Shippori Mincho', serif;
+    font-weight: 700;
+    font-size: clamp(1.7rem, 5vw, 2.3rem);
+    margin: 0 0 10px;
+    color: var(--ink);
+  }
+  .qz-sub {
+    color: var(--ink-soft);
+    line-height: 1.8;
+    font-size: 0.95rem;
+    margin: 0 0 28px;
+    max-width: 46ch;
+  }
+
+  /* ---------- Steps ---------- */
+  .qz-steps {
+    list-style: none;
+    margin: 0 0 28px;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  .qz-steps li {
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+    font-size: 0.88rem;
+    color: var(--ink-soft);
+    line-height: 1.6;
+  }
+  .qz-steps .num {
+    font-family: 'JetBrains Mono', monospace;
+    font-weight: 700;
+    color: var(--primary);
+    background: #fff;
+    border: 1px solid var(--line);
+    border-radius: 50%;
+    width: 24px;
+    height: 24px;
+    flex: 0 0 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.78rem;
+  }
+
+  /* ---------- Dropzone ---------- */
+  .qz-dropzone {
+    border: 2px dashed var(--line);
+    border-radius: var(--radius);
+    background: var(--paper);
+    padding: 36px 20px;
+    text-align: center;
+    cursor: pointer;
+    transition: border-color .15s, background .15s;
+  }
+  .qz-dropzone:hover, .qz-dropzone.drag {
+    border-color: var(--primary-soft);
+    background: #fff;
+  }
+  .qz-dropzone svg { width: 34px; height: 34px; color: var(--primary-soft); margin-bottom: 10px; }
+  .qz-dropzone p { margin: 0; font-size: 0.92rem; color: var(--ink-soft); }
+  .qz-dropzone p.small { font-size: 0.78rem; color: var(--ink-faint); margin-top: 6px; }
+  .qz-dropzone input { display: none; }
+
+  .qz-or {
+    text-align: center;
+    color: var(--ink-faint);
+    font-size: 0.78rem;
+    margin: 16px 0;
+    font-family: 'JetBrains Mono', monospace;
+    letter-spacing: 0.08em;
+  }
+  .qz-sample-btn {
+    display: block;
+    margin: 0 auto;
+    background: none;
+    border: 1px solid var(--line);
+    color: var(--primary);
+    font-family: 'Zen Kaku Gothic New', sans-serif;
+    font-weight: 600;
+    font-size: 0.85rem;
+    padding: 10px 18px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background .15s, border-color .15s;
+  }
+  .qz-sample-btn:hover { background: #fff; border-color: var(--primary-soft); }
+
+  /* ---------- Status panels ---------- */
+  .qz-panel {
+    margin-top: 20px;
+    border-radius: 10px;
+    padding: 16px 18px;
+    font-size: 0.88rem;
+    line-height: 1.7;
+  }
+  .qz-panel.ok {
+    background: #fff;
+    border: 1px solid var(--line);
+    border-left: 4px solid var(--primary);
+  }
+  .qz-panel.warn {
+    background: var(--red-soft);
+    border: 1px solid rgba(178,58,42,0.25);
+    border-left: 4px solid var(--red);
+  }
+  .qz-panel.error {
+    background: var(--red-soft);
+    border: 1px solid rgba(178,58,42,0.3);
+    border-left: 4px solid var(--red);
+  }
+  .qz-panel strong { font-family: 'JetBrains Mono', monospace; }
+  .qz-panel ul { margin: 8px 0 0; padding-left: 20px; }
+  .qz-panel-row { display: flex; align-items: center; justify-content: space-between; gap: 14px; flex-wrap: wrap; }
+  .qz-checkbox-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 14px;
+    font-size: 0.85rem;
+    color: var(--ink-soft);
+  }
+  .qz-timer-option-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 10px;
+    flex-wrap: wrap;
+  }
+  .qz-timer-option-row .qz-checkbox-row { margin-top: 0; }
+  .qz-timer-option-row select {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.82rem;
+    border: 1px solid var(--line);
+    border-radius: 6px;
+    padding: 4px 8px;
+    background: #fff;
+    color: var(--ink);
+  }
+  .qz-stage-breakdown { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
+  .qz-stage-chip {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.74rem;
+    color: var(--ink-soft);
+    background: #fff;
+    border: 1px solid var(--line);
+    border-radius: 6px;
+    padding: 3px 8px;
+  }
+
+  /* ---------- Buttons ---------- */
+  .qz-btn {
+    font-family: 'Zen Kaku Gothic New', sans-serif;
+    font-weight: 700;
+    font-size: 0.92rem;
+    border: none;
+    border-radius: 8px;
+    padding: 12px 22px;
+    cursor: pointer;
+    transition: background .15s, transform .08s, opacity .15s;
+  }
+  .qz-btn-primary { background: var(--primary); color: #fff; }
+  .qz-btn-primary:hover { background: var(--primary-soft); }
+  .qz-btn-primary:disabled { opacity: 0.4; cursor: not-allowed; }
+  .qz-btn-ghost { background: none; color: var(--primary); border: 1px solid var(--line); }
+  .qz-btn-ghost:hover { border-color: var(--primary-soft); background: #fff; }
+  .qz-btn-ghost:disabled { opacity: 0.4; cursor: not-allowed; }
+  .qz-btn:focus-visible { outline: 3px solid var(--pencil); outline-offset: 2px; }
+  .qz-btn:active { transform: scale(0.98); }
+  .qz-btn-small { font-size: 0.8rem; padding: 9px 14px; }
+
+  /* ---------- Quiz header ---------- */
+  .qz-quiz-top { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 8px; gap: 10px; flex-wrap: wrap; }
+  .qz-back {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.74rem;
+    color: var(--ink-faint);
+    background: none;
+    border: none;
+    cursor: pointer;
+    text-decoration: underline;
+    padding: 0;
+  }
+  .qz-progress-track { height: 6px; background: var(--line); border-radius: 4px; overflow: hidden; }
+  .qz-progress-fill { height: 100%; background: var(--primary); width: 0%; transition: width .35s ease; }
+  .qz-meta { display: flex; justify-content: space-between; margin-top: 9px; font-family: 'JetBrains Mono', monospace; font-size: 0.8rem; color: var(--ink-soft); }
+
+  /* ---------- Timer ---------- */
+  .qz-timer-row { display: flex; align-items: center; gap: 10px; margin-top: 12px; }
+  .qz-timer-track { flex: 1; height: 5px; background: var(--line); border-radius: 3px; overflow: hidden; }
+  .qz-timer-fill { height: 100%; width: 100%; background: var(--primary-soft); transition: width .2s linear, background .3s; }
+  .qz-timer-fill.low { background: var(--red); }
+  .qz-timer-text { font-family: 'JetBrains Mono', monospace; font-size: 0.78rem; color: var(--ink-soft); white-space: nowrap; }
+  .qz-timer-text.low { color: var(--red); font-weight: 700; }
+
+  /* ---------- Combo tag ---------- */
+  .qz-combo-tag {
+    color: var(--red);
+    font-weight: 700;
+    margin-left: 8px;
+    display: inline-block;
+    animation: qzComboPop .25s ease-out;
+  }
+  @keyframes qzComboPop { 0% { transform: scale(1.7); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
+
+  /* ---------- Card ---------- */
+  .qz-card {
+    position: relative;
+    background: var(--paper);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    padding: 30px 28px 30px 50px;
+    margin-top: 20px;
+  }
+  .qz-card::before {
+    content: "";
+    position: absolute;
+    left: 32px;
+    top: 0;
+    bottom: 0;
+    width: 1px;
+    background: var(--red);
+    opacity: 0.35;
+  }
+  .qz-qnum {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.8rem;
+    color: var(--ink-faint);
+    margin-bottom: 8px;
+  }
+  .qz-qtext {
+    font-family: 'Shippori Mincho', serif;
+    font-size: clamp(1.08rem, 3vw, 1.3rem);
+    line-height: 1.7;
+    color: var(--ink);
+    margin: 0 0 24px;
+  }
+
+  .qz-choices { display: flex; flex-direction: column; gap: 10px; }
+  .qz-choice {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    width: 100%;
+    text-align: left;
+    background: #fff;
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    padding: 13px 16px;
+    font-family: 'Zen Kaku Gothic New', sans-serif;
+    font-size: 0.96rem;
+    color: var(--ink);
+    cursor: pointer;
+    transition: background .15s, border-color .15s, opacity .2s;
+  }
+  .qz-choice:hover:not(.disabled) { border-color: var(--primary-soft); background: #fff; }
+  .qz-choice:focus-visible { outline: 3px solid var(--primary-soft); outline-offset: 2px; }
+  .qz-choice.disabled { cursor: default; }
+  .qz-choice.dim { opacity: 0.5; }
+  .qz-choice.is-correct { border-color: var(--red); box-shadow: inset 0 0 0 1px var(--red-soft); }
+  .qz-choice.is-wrong { border-color: var(--red); background: var(--red-soft); }
+  .qz-choice.is-wrong .qz-choice-text { text-decoration: line-through; text-decoration-color: var(--red); text-decoration-thickness: 1.5px; }
+
+  .qz-tag-wrap { position: relative; flex: 0 0 30px; width: 30px; height: 30px; display: flex; align-items: center; justify-content: center; }
+  .qz-tag {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.95rem;
+    color: var(--ink-soft);
+  }
+  .qz-stamp { position: absolute; top: -13px; left: -13px; width: 56px; height: 56px; pointer-events: none; }
+  .qz-stamp path { fill: none; stroke: var(--red); stroke-width: 4.5; stroke-linecap: round; }
+  .qz-stamp.correct { animation: qzStampCorrect .32s ease-out; }
+  .qz-stamp.wrong { animation: qzStampWrong .32s ease-out; }
+  @keyframes qzStampCorrect { 0% { transform: scale(1.8) rotate(-7deg); opacity: 0; } 100% { transform: scale(1) rotate(-7deg); opacity: 1; } }
+  @keyframes qzStampWrong { 0% { transform: scale(1.8) rotate(5deg); opacity: 0; } 100% { transform: scale(1) rotate(5deg); opacity: 1; } }
+
+  .qz-choice-text { flex: 1; }
+
+  /* ---------- Explanation panel ---------- */
+  .qz-explain {
+    position: relative;
+    margin-top: 0;
+    background: #FFFDF6;
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    padding: 0 20px;
+    max-height: 0;
+    opacity: 0;
+    overflow: hidden;
+    transition: max-height .4s ease, opacity .4s ease, margin-top .4s ease, padding .4s ease;
+  }
+  .qz-explain.visible { max-height: 600px; opacity: 1; margin-top: 22px; padding: 22px 20px 18px; }
+  .qz-tape {
+    position: absolute;
+    top: -10px;
+    left: 26px;
+    width: 60px;
+    height: 18px;
+    background: rgba(232,179,57,0.55);
+    transform: rotate(-3deg);
+    border-radius: 2px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.15);
+  }
+  .qz-verdict {
+    font-family: 'JetBrains Mono', monospace;
+    font-weight: 700;
+    color: var(--red);
+    letter-spacing: 0.04em;
+    margin-bottom: 8px;
+    font-size: 0.92rem;
+  }
+  .qz-explain-body {
+    font-size: 0.93rem;
+    line-height: 1.85;
+    color: var(--ink);
+    white-space: pre-wrap;
+  }
+
+  .qz-next-row { margin-top: 26px; display: flex; justify-content: flex-end; }
+
+  /* ---------- Player select screen ---------- */
+  .qz-player-input-row {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    align-items: center;
+  }
+  .qz-player-input-row input[type="text"] {
+    flex: 1 1 200px;
+    min-width: 140px;
+    padding: 10px 12px;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    font-family: inherit;
+    font-size: 0.9rem;
+    background: #fff;
+    color: var(--ink);
+  }
+  .qz-player-input-row input[type="text"]:focus-visible { outline: 3px solid var(--primary-soft); outline-offset: 1px; }
+
+  /* ---------- Dashboard (stage map) ---------- */
+  .qz-dashboard {
+    background: var(--paper);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    padding: 22px 22px 16px;
+    margin-bottom: 20px;
+  }
+  .qz-dash-section { padding: 14px 0; border-bottom: 1px solid var(--line); }
+  .qz-dash-section:first-child { padding-top: 0; }
+  .qz-dash-section:last-child { border-bottom: none; padding-bottom: 0; }
+  .qz-section-title {
+    font-family: 'Shippori Mincho', serif;
+    font-weight: 700;
+    font-size: 0.92rem;
+    color: var(--ink);
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .qz-section-title .count { font-family: 'JetBrains Mono', monospace; font-size: 0.76rem; color: var(--ink-faint); font-weight: 400; }
+
+  .qz-level-row-wrap { display: flex; gap: 14px; align-items: center; }
+  .qz-level-illustration { flex: 0 0 auto; width: 84px; height: 84px; }
+  .qz-level-text-col { flex: 1; min-width: 0; }
+  .qz-level-row { display: flex; align-items: baseline; gap: 10px; margin-bottom: 8px; flex-wrap: wrap; }
+  .qz-level-badge { font-family: 'JetBrains Mono', monospace; font-weight: 700; font-size: 1.15rem; color: var(--red); }
+  .qz-level-name { font-family: 'Shippori Mincho', serif; font-weight: 700; font-size: 1rem; color: var(--ink); }
+  .qz-exp-track { height: 8px; background: var(--line); border-radius: 5px; overflow: hidden; }
+  .qz-exp-fill { height: 100%; background: var(--pencil); transition: width .4s ease; }
+  .qz-exp-text { margin-top: 6px; font-family: 'JetBrains Mono', monospace; font-size: 0.74rem; color: var(--ink-soft); }
+
+  .qz-mission-row { position: relative; display: flex; align-items: center; gap: 10px; padding: 7px 0; font-size: 0.86rem; overflow: hidden; }
+  .qz-mission-row .label { flex: 1; }
+  .qz-mission-row .prog { font-family: 'JetBrains Mono', monospace; font-size: 0.74rem; color: var(--ink-faint); }
+  .qz-mission-stamp {
+    position: absolute;
+    right: 4px;
+    top: 50%;
+    transform: translateY(-50%) rotate(-13deg);
+    border: 2px solid var(--red);
+    border-radius: 5px;
+    color: var(--red);
+    font-family: 'Shippori Mincho', serif;
+    font-weight: 700;
+    font-size: 0.72rem;
+    padding: 1px 9px;
+    background: rgba(255,255,255,0.6);
+    opacity: 0.92;
+    pointer-events: none;
+    animation: qzStampCorrect .35s ease-out;
+  }
+
+  .qz-weak-summary { font-size: 0.86rem; color: var(--ink-soft); margin: 0 0 10px; line-height: 1.6; }
+  .qz-weak-actions { display: flex; gap: 8px; flex-wrap: wrap; }
+
+  .qz-title-chip-list { display: flex; flex-wrap: wrap; gap: 14px; }
+  .qz-title-chip-item { display: flex; flex-direction: column; align-items: center; width: 64px; text-align: center; }
+  .qz-title-chip-item .qz-badge-icon { width: 48px; height: 48px; }
+  .qz-title-chip-item .chip-label { font-size: 0.66rem; color: var(--ink-soft); margin-top: 4px; line-height: 1.3; }
+  .qz-title-chip-item.locked .chip-label { color: var(--ink-faint); }
+
+  .qz-goal-list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 6px; }
+  .qz-goal-list li { font-size: 0.84rem; color: var(--ink-soft); padding-left: 14px; position: relative; line-height: 1.6; }
+  .qz-goal-list li::before { content: "・"; position: absolute; left: 0; color: var(--red); }
+
+  /* ---------- Illustration SVGs ---------- */
+  .qz-levelchar .lc-frame { fill: #fff; stroke: var(--primary); stroke-width: 2.5; }
+  .qz-levelchar .lc-line { fill: none; stroke: var(--ink); stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round; }
+  .qz-levelchar .lc-accent { fill: none; stroke: var(--red); stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round; }
+
+  .qz-badge-icon .bi-ring { fill: #fff; stroke: var(--red); stroke-width: 3; }
+  .qz-badge-icon .bi-ring-inner { fill: none; stroke: var(--red); stroke-width: 1.2; opacity: 0.6; }
+  .qz-badge-icon .bi-symbol { fill: none; stroke: var(--red); stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round; }
+  .qz-badge-icon.locked .bi-ring { stroke: var(--ink-faint); }
+  .qz-badge-icon.locked .bi-ring-inner { stroke: var(--ink-faint); }
+  .qz-badge-icon .bi-qmark { fill: var(--ink-faint); }
+
+  /* ---------- Stage select screen ---------- */
+  .qz-stage-list { display: flex; flex-direction: column; }
+  .qz-stage-card {
+    display: flex; align-items: center; gap: 14px;
+    width: 100%; text-align: left;
+    background: #fff; border: 1px solid var(--line); border-radius: 12px;
+    padding: 16px 18px; margin-bottom: 10px;
+    cursor: pointer; transition: border-color .15s, background .15s;
+    font-family: inherit;
+  }
+  .qz-stage-card:hover:not(:disabled) { border-color: var(--primary-soft); }
+  .qz-stage-card:disabled { cursor: not-allowed; opacity: 0.55; }
+  .qz-stage-card.cleared { border-color: var(--red); }
+  .qz-stage-num { font-family: 'JetBrains Mono', monospace; font-weight: 700; font-size: 0.92rem; color: var(--primary); width: 78px; flex: 0 0 78px; }
+  .qz-stage-info { flex: 1; display: flex; flex-direction: column; gap: 2px; }
+  .qz-stage-info .label { font-family: 'Shippori Mincho', serif; font-weight: 700; font-size: 1rem; color: var(--ink); }
+  .qz-stage-info .sub { font-size: 0.76rem; color: var(--ink-faint); font-family: 'JetBrains Mono', monospace; }
+  .qz-stage-status { font-family: 'JetBrains Mono', monospace; font-size: 0.78rem; flex: 0 0 auto; text-align: right; white-space: nowrap; }
+  .qz-stage-status.cleared-tag { color: var(--red); font-weight: 700; }
+  .qz-stage-status.open-tag { color: var(--primary); font-weight: 700; }
+
+  /* ---------- Result screen ---------- */
+  .qz-result-score {
+    text-align: center;
+    padding: 36px 20px 30px;
+    background: var(--paper);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+  }
+  .qz-stageresult-title {
+    font-family: 'Shippori Mincho', serif;
+    font-weight: 700;
+    font-size: 1.3rem;
+    margin: 2px 0 12px;
+    color: var(--ink);
+  }
+  .qz-stageresult-title.clear { color: var(--red); }
+  .qz-stageresult-title.fail { color: var(--ink-soft); }
+  .qz-result-score .big {
+    font-family: 'JetBrains Mono', monospace;
+    font-weight: 700;
+    font-size: clamp(2.4rem, 9vw, 3.2rem);
+    color: var(--primary);
+    line-height: 1;
+  }
+  .qz-result-score .pct { color: var(--ink-soft); font-size: 0.95rem; margin-top: 8px; }
+  .qz-combo-stat { color: var(--ink-soft); font-size: 0.85rem; margin-top: 6px; font-family: 'JetBrains Mono', monospace; }
+  .qz-result-actions { display: flex; gap: 10px; justify-content: center; margin-top: 22px; flex-wrap: wrap; }
+
+  /* growth / EXP panel on result screen */
+  .qz-growth-panel { margin-top: 18px; padding-top: 18px; border-top: 1px dashed var(--line); text-align: left; }
+  .qz-growth-line { font-size: 0.86rem; color: var(--ink-soft); margin: 4px 0; line-height: 1.6; }
+  .qz-growth-line.highlight { color: var(--red); font-weight: 700; }
+  .qz-levelup-banner {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    background: var(--red-soft);
+    border: 1px solid var(--red);
+    border-radius: 10px;
+    padding: 14px;
+    margin: 10px 0;
+    font-family: 'Shippori Mincho', serif;
+    font-weight: 700;
+    color: var(--red);
+    text-align: center;
+  }
+  .qz-levelup-banner .qz-levelchar { width: 84px; height: 84px; }
+  .qz-title-earned-banner {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: #FFFDF6;
+    border: 1px solid var(--pencil);
+    border-radius: 10px;
+    padding: 10px 14px;
+    margin: 6px 0;
+    font-size: 0.86rem;
+    color: var(--ink);
+  }
+  .qz-title-earned-banner .qz-badge-icon { width: 40px; height: 40px; flex: 0 0 auto; }
+  .qz-title-earned-banner b { color: var(--red); }
+  .qz-growth-goal-heading { margin-top: 10px; font-weight: 700; color: var(--ink); }
+
+  /* ---------- Stamps on result ---------- */
+  #qz-stamp-area { margin: 4px 0 10px; display: flex; flex-direction: column; align-items: center; gap: 6px; min-height: 90px; justify-content: center; }
+  .qz-hanamaru-svg { width: 84px; height: 84px; animation: qzStampCorrect .4s ease-out; }
+  .qz-hanamaru-svg path { fill: none; stroke: var(--red); stroke-width: 4; stroke-linejoin: round; stroke-linecap: round; }
+  .qz-stamp-caption { font-family: 'Shippori Mincho', serif; color: var(--red); font-weight: 700; font-size: 1rem; }
+  .qz-hanko {
+    width: 124px; height: 124px; border-radius: 50%;
+    border: 3px solid var(--red);
+    display: flex; align-items: center; justify-content: center;
+    margin: 0 auto; position: relative;
+    font-family: 'Shippori Mincho', serif; font-weight: 700; color: var(--red);
+    font-size: 0.92rem; line-height: 1.4; text-align: center;
+    transform: rotate(-4deg);
+    animation: qzStampCorrect .35s ease-out;
+    padding: 10px;
+  }
+  .qz-hanko::before { content: ""; position: absolute; inset: 7px; border: 1px solid var(--red); border-radius: 50%; }
+  .qz-hanko.soft { border-color: rgba(178,58,42,0.55); color: rgba(178,58,42,0.85); }
+  .qz-hanko.soft::before { border-color: rgba(178,58,42,0.4); }
+  .qz-encourage { color: var(--ink-soft); font-size: 0.92rem; line-height: 1.75; max-width: 30ch; margin: 0 auto; text-align: center; }
+
+  .qz-review { margin-top: 24px; display: flex; flex-direction: column; gap: 8px; }
+  .qz-review-item { background: var(--paper); border: 1px solid var(--line); border-radius: 10px; }
+  .qz-review-item summary {
+    list-style: none;
+    cursor: pointer;
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 13px 16px;
+    font-size: 0.9rem;
+  }
+  .qz-review-item summary::-webkit-details-marker { display: none; }
+  .qz-review-mark { font-family: 'JetBrains Mono', monospace; font-weight: 700; color: var(--red); flex: 0 0 auto; }
+  .qz-review-body { padding: 0 16px 16px 40px; font-size: 0.87rem; color: var(--ink-soft); line-height: 1.8; }
+  .qz-review-body .label { font-family: 'JetBrains Mono', monospace; color: var(--red); font-weight: 700; font-size: 0.8rem; margin-bottom: 4px; display: block; }
+
+  @media (prefers-reduced-motion: reduce) {
+    .qz-root * { animation: none !important; transition: none !important; }
+  }
+</style>
+
+<div class="qz-root">
+  <svg class="qz-bg-pattern" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+    <defs>
+      <pattern id="qzEcoPattern" width="150" height="150" patternUnits="userSpaceOnUse">
+        <g class="eco-mol">
+          <circle cx="20" cy="20" r="3"></circle>
+          <circle cx="40" cy="10" r="3"></circle>
+          <circle cx="40" cy="34" r="3"></circle>
+          <line x1="20" y1="20" x2="40" y2="10"></line>
+          <line x1="20" y1="20" x2="40" y2="34"></line>
+          <line x1="40" y1="10" x2="40" y2="34"></line>
+        </g>
+        <g class="eco-leaf" transform="translate(95,75)">
+          <path d="M0 20 Q -10 5 0 -10 Q 10 5 0 20 Z"></path>
+          <line x1="0" y1="18" x2="0" y2="-8"></line>
+        </g>
+        <g class="eco-mol" transform="translate(70,115) scale(0.7)">
+          <circle cx="20" cy="20" r="3"></circle>
+          <circle cx="40" cy="10" r="3"></circle>
+          <circle cx="40" cy="34" r="3"></circle>
+          <line x1="20" y1="20" x2="40" y2="10"></line>
+          <line x1="20" y1="20" x2="40" y2="34"></line>
+          <line x1="40" y1="10" x2="40" y2="34"></line>
+        </g>
+        <g class="eco-leaf" transform="translate(20,100) rotate(40) scale(0.7)">
+          <path d="M0 20 Q -10 5 0 -10 Q 10 5 0 20 Z"></path>
+          <line x1="0" y1="18" x2="0" y2="-8"></line>
+        </g>
+      </pattern>
+    </defs>
+    <rect width="100%" height="100%" fill="url(#qzEcoPattern)"></rect>
+  </svg>
+
+  <div class="qz-wrap">
+
+    <!-- ============ SCREEN: UPLOAD ============ -->
+    <div id="qz-screen-upload">
+      <div class="qz-eyebrow">EXCEL → STAGE QUIZ</div>
+      <h1 class="qz-title">即解クイズ</h1>
+      <p class="qz-sub">Excelの問題をステージ別に読み込み、好きなステージから挑戦できる学習ゲームです。各ステージは10問中8問以上正解でクリアになります。</p>
+
+      <ul class="qz-steps">
+        <li><span class="num">1</span><span>テンプレートに「ステージ」「問題文」「選択肢」「正解」「解説」を入力する</span></li>
+        <li><span class="num">2</span><span>ファイルを保存する</span></li>
+        <li><span class="num">3</span><span>下の枠にアップロードしてプレイヤーを選ぶ</span></li>
+      </ul>
+
+      <div class="qz-dropzone" id="qz-dropzone" tabindex="0" role="button" aria-label="Excelファイルを選択">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M12 3v12m0 0l-4-4m4 4l4-4M5 21h14" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <p>ここにExcelファイルをドラッグ、またはクリックして選択</p>
+        <p class="small">.xlsx / .xls に対応・1枚目のシートを読み込みます</p>
+        <input type="file" id="qz-file-input" accept=".xlsx,.xls" />
+      </div>
+
+      <div class="qz-or">― または ―</div>
+      <button class="qz-sample-btn" id="qz-sample-btn" type="button">サンプルデータで試す(2ステージ)</button>
+
+      <div id="qz-status-area"></div>
+    </div>
+
+    <!-- ============ SCREEN: PLAYER SELECT ============ -->
+    <div id="qz-screen-playerselect" class="hidden">
+      <div class="qz-quiz-top">
+        <button class="qz-back" id="qz-player-back-btn" type="button">← 別のファイルを選ぶ</button>
+      </div>
+      <div class="qz-eyebrow">PLAYER SELECT</div>
+      <h2 class="qz-title" style="font-size:1.5rem;">プレイヤーを選ぶ</h2>
+      <p class="qz-sub">名前を選ぶと、そのプレイヤーの記録(レベル・進捗・苦手問題など)を読み込みます。同じ名前を選べば続きから取り組めます。</p>
+      <div class="qz-stage-list" id="qz-player-list"></div>
+      <div class="qz-panel ok">
+        <div class="qz-player-input-row">
+          <input type="text" id="qz-player-name-input" placeholder="名前を入力(ニックネームでOK)" maxlength="20" />
+          <button class="qz-btn qz-btn-primary" id="qz-player-start-btn" type="button">このプレイヤーで始める</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ============ SCREEN: STAGE MAP (+ dashboard) ============ -->
+    <div id="qz-screen-stagemap" class="hidden">
+      <div class="qz-quiz-top">
+        <button class="qz-back" id="qz-map-back-btn" type="button">← 別のファイルを選ぶ</button>
+        <button class="qz-back" id="qz-switch-player-btn" type="button">プレイヤーを切り替える</button>
+      </div>
+      <div class="qz-eyebrow">DASHBOARD</div>
+      <h2 class="qz-title" style="font-size:1.5rem;" id="qz-dashboard-title">研究員ダッシュボード</h2>
+
+      <div class="qz-dashboard">
+        <div class="qz-dash-section">
+          <div class="qz-section-title">レベル</div>
+          <div class="qz-level-row-wrap">
+            <div class="qz-level-illustration" id="qz-level-illustration"></div>
+            <div class="qz-level-text-col">
+              <div class="qz-level-row">
+                <span class="qz-level-badge">Lv<span id="qz-level-num">1</span></span>
+                <span class="qz-level-name" id="qz-level-name">見習い研究員</span>
+              </div>
+              <div class="qz-exp-track"><div class="qz-exp-fill" id="qz-exp-fill"></div></div>
+              <div class="qz-exp-text" id="qz-exp-text"></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="qz-dash-section">
+          <div class="qz-section-title">今日のミッション</div>
+          <div id="qz-mission-list"></div>
+        </div>
+
+        <div class="qz-dash-section">
+          <div class="qz-section-title">未攻略問題</div>
+          <p class="qz-weak-summary" id="qz-weak-summary"></p>
+          <div class="qz-weak-actions">
+            <button class="qz-btn qz-btn-ghost qz-btn-small" id="qz-weak-review-btn" type="button">未攻略問題だけ復習する</button>
+            <button class="qz-btn qz-btn-ghost qz-btn-small" id="qz-recommend-btn" type="button">おすすめ復習</button>
+          </div>
+        </div>
+
+        <div class="qz-dash-section">
+          <div class="qz-section-title">獲得した称号 <span class="count" id="qz-title-count"></span></div>
+          <div class="qz-title-chip-list" id="qz-title-chip-list"></div>
+        </div>
+
+        <div class="qz-dash-section">
+          <div class="qz-section-title">あと少しで達成</div>
+          <ul class="qz-goal-list" id="qz-goal-list"></ul>
+        </div>
+      </div>
+
+      <p class="qz-sub" style="margin-bottom:16px;">どのステージからでも挑戦できます。気になるステージから始めましょう。</p>
+      <div class="qz-stage-list" id="qz-stage-list"></div>
+    </div>
+
+    <!-- ============ SCREEN: QUIZ ============ -->
+    <div id="qz-screen-quiz" class="hidden">
+      <div class="qz-quiz-top">
+        <button class="qz-back" id="qz-back-btn" type="button">← ステージ選択に戻る</button>
+      </div>
+      <div class="qz-progress-track"><div class="qz-progress-fill" id="qz-progress-fill"></div></div>
+      <div class="qz-meta">
+        <span id="qz-counter">問 01 / 01</span>
+        <span id="qz-score">正解 0</span>
+      </div>
+      <div class="qz-timer-row hidden" id="qz-timer-row">
+        <div class="qz-timer-track"><div class="qz-timer-fill" id="qz-timer-fill"></div></div>
+        <span class="qz-timer-text" id="qz-timer-text"></span>
+      </div>
+
+      <div class="qz-card">
+        <div class="qz-qnum" id="qz-qnum">問 1</div>
+        <p class="qz-qtext" id="qz-qtext"></p>
+        <div class="qz-choices" id="qz-choices"></div>
+
+        <div class="qz-explain" id="qz-explain">
+          <div class="qz-tape"></div>
+          <div class="qz-verdict" id="qz-verdict"></div>
+          <div class="qz-explain-body" id="qz-explain-body"></div>
+        </div>
+
+        <div class="qz-next-row">
+          <button class="qz-btn qz-btn-primary" id="qz-next-btn" disabled>次の問題へ</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ============ SCREEN: STAGE RESULT ============ -->
+    <div id="qz-screen-stageresult" class="hidden">
+      <div class="qz-result-score">
+        <div class="qz-eyebrow" id="qz-stageresult-eyebrow" style="text-align:center;">STAGE RESULT</div>
+        <div id="qz-stamp-area"></div>
+        <div class="qz-stageresult-title" id="qz-stageresult-title"></div>
+        <div class="big" id="qz-result-big">0 / 0</div>
+        <div class="pct" id="qz-result-pct"></div>
+        <div class="qz-combo-stat" id="qz-combo-stat"></div>
+        <div class="qz-growth-panel" id="qz-growth-panel"></div>
+        <div class="qz-result-actions" id="qz-result-actions"></div>
+      </div>
+
+      <div class="qz-review" id="qz-review"></div>
+    </div>
+
+  </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<script>
+(function () {
+  var TAGS = ['①','②','③','④','⑤','⑥'];
+
+  var HANAMARU_PATH = "M86,50 L69.05,61 L68,81.18 L50,72 L32,81.18 L30.95,61 L14,50 L30.95,39 L32,18.82 L50,28 L68,18.82 L69.05,39 Z";
+  var HANAMARU_SVG =
+    '<svg class="qz-hanamaru-svg" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">' +
+    '<path d="' + HANAMARU_PATH + '"></path>' +
+    '<path d="' + HANAMARU_PATH + '" transform="rotate(10 50 50)" opacity="0.55"></path>' +
+    '</svg>';
+
+  /* ---------------- Small SVG illustration helpers ---------------- */
+
+  function svgLine(x1, y1, x2, y2, cls) {
+    return '<line class="' + cls + '" x1="' + x1 + '" y1="' + y1 + '" x2="' + x2 + '" y2="' + y2 + '"/>';
+  }
+  function sunburstLines(cx, cy, rInner, rOuter, count, cls) {
+    var out = '';
+    for (var i = 0; i < count; i++) {
+      var ang = (Math.PI * 2 / count) * i;
+      var x1 = (cx + rInner * Math.cos(ang)).toFixed(1);
+      var y1 = (cy + rInner * Math.sin(ang)).toFixed(1);
+      var x2 = (cx + rOuter * Math.cos(ang)).toFixed(1);
+      var y2 = (cy + rOuter * Math.sin(ang)).toFixed(1);
+      out += svgLine(x1, y1, x2, y2, cls);
+    }
+    return out;
+  }
+  function sparkleMark(cx, cy, r, cls) {
+    var d = (r * 0.7).toFixed(1);
+    return svgLine(cx, cy - r, cx, cy + r, cls) +
+      svgLine(cx - r, cy, cx + r, cy, cls) +
+      svgLine((cx - d), (cy - d), (cx + d), (cy + d), cls) +
+      svgLine((cx + d), (cy - d), (cx - d), (cy + d), cls);
+  }
+
+  // A small "researcher" emblem that gains new accessories as the player levels up.
+  function levelIllustrationSVG(level) {
+    var bust = '<circle class="lc-line" cx="36" cy="27" r="9"/>' +
+               '<path class="lc-line" d="M19 58 Q19 40 36 40 Q53 40 53 58"/>';
+    var extra = '';
+    if (level === 1) {
+      extra = '<circle class="lc-accent" cx="48" cy="50" r="5"/>' + svgLine(51.5, 53.5, 56, 58, 'lc-accent');
+    } else if (level === 2) {
+      extra = '<path class="lc-accent" d="M44 44 L46 56 Q46 58 49 58 Q52 58 52 56 L54 44"/>' + svgLine(43, 44, 55, 44, 'lc-accent');
+    } else if (level === 3) {
+      extra = svgLine(48, 58, 48, 46, 'lc-accent') +
+              '<path class="lc-accent" d="M48 46 Q43 44 43 40 Q48 42 48 46 Q53 42 53 40 Q53 44 48 46"/>';
+    } else if (level === 4) {
+      extra = '<path class="lc-accent" d="M25 18 L36 13 L47 18 L36 23 Z"/>' +
+              svgLine(47, 18, 47, 25, 'lc-accent') +
+              '<circle class="lc-accent" cx="47" cy="26" r="1.6"/>' +
+              '<circle class="lc-accent" cx="50" cy="52" r="6"/>' +
+              '<path class="lc-accent" d="M44 52 Q50 48 56 52 M44 52 Q50 56 56 52"/>';
+    } else if (level === 5) {
+      extra = '<path class="lc-line" d="M19 58 Q14 50 17 42"/>' +
+              '<path class="lc-line" d="M53 58 Q58 50 55 42"/>' +
+              '<circle class="lc-accent" cx="36" cy="48" r="4"/>' +
+              sparkleMark(53, 46, 4, 'lc-accent');
+    } else {
+      extra = sunburstLines(36, 36, 29, 35, 12, 'lc-accent') +
+              '<circle class="lc-accent" cx="50" cy="50" r="6"/>' +
+              sparkleMark(50, 50, 3, 'lc-accent') +
+              sparkleMark(40, 58, 2.5, 'lc-accent');
+    }
+    return '<svg class="qz-levelchar" viewBox="0 0 72 72" xmlns="http://www.w3.org/2000/svg">' +
+      '<circle class="lc-frame" cx="36" cy="36" r="32"/>' + bust + extra + '</svg>';
+  }
+
+  // A small medal/badge illustration per earned title.
+  function titleBadgeSVG(titleId, earned) {
+    var sym;
+    if (!earned) {
+      sym = '<text x="24" y="30" text-anchor="middle" font-size="16" font-family="JetBrains Mono, monospace" font-weight="700" class="bi-qmark">?</text>';
+    } else if (titleId === 'first_step') {
+      sym = '<ellipse class="bi-symbol" cx="24" cy="27" rx="5" ry="7"/>' +
+            '<circle class="bi-symbol" cx="20" cy="18" r="1.4"/>' +
+            '<circle class="bi-symbol" cx="24" cy="16" r="1.4"/>' +
+            '<circle class="bi-symbol" cx="28" cy="18" r="1.4"/>';
+    } else if (titleId === 'first_clear') {
+      sym = svgLine(18, 32, 18, 14, 'bi-symbol') + '<path class="bi-symbol" d="M18 14 L30 17 L18 21 Z"/>';
+    } else if (titleId === 'hanamaru_artisan') {
+      sym = '<g transform="translate(6,6) scale(0.30)"><path class="bi-symbol" d="' + HANAMARU_PATH + '"/></g>';
+    } else if (titleId === 'review_master') {
+      sym = '<path class="bi-symbol" d="M14 16 L14 30 Q19 27 24 30 Q29 27 34 30 L34 16 Q29 13 24 16 Q19 13 14 16 Z"/>' +
+            svgLine(24, 16, 24, 30, 'bi-symbol');
+    } else {
+      sym = '<circle class="bi-symbol" cx="24" cy="24" r="7"/>' + sunburstLines(24, 24, 9, 12, 8, 'bi-symbol');
+    }
+    return '<svg class="qz-badge-icon' + (earned ? '' : ' locked') + '" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">' +
+      '<circle class="bi-ring" cx="24" cy="24" r="20"/>' +
+      '<circle class="bi-ring-inner" cx="24" cy="24" r="16"/>' +
+      sym + '</svg>';
+  }
+
+  /* ---------------- Gamification tuning constants ---------------- */
+  var EXP_CORRECT = 10;          // normal correct answer
+  var EXP_INCORRECT = 2;         // effort credit for trying (never zero - we don't punish mistakes)
+  var EXP_REVIEW_CORRECT = 15;   // conquering a previously-weak question
+  var EXP_STAGE_CLEAR = 30;      // bonus for clearing a stage
+  var EXP_PERFECT_BONUS = 50;    // extra bonus for a 100% clear
+  var EXP_MISSION = 20;          // bonus per daily mission completed
+  var EXP_TITLE = 20;            // bonus per title earned
+
+  var MISSION_TEMPLATES = [
+    { id: 'answer5', label: '今日5問解く', metric: 'answered', target: 5 },
+    { id: 'correct3', label: '今日3問正解する', metric: 'correct', target: 3 },
+    { id: 'weak1', label: '苦手問題を1問攻略する', metric: 'weakCleared', target: 1 },
+    { id: 'combo3', label: '3連続正解する', metric: 'comboMax', target: 3 }
+  ];
+
+  var TITLE_DEFS = [
+    { id: 'first_step', label: 'はじめの一歩', desc: '初めて1問解く', check: function (p) { return p.totalAnswered >= 1; } },
+    { id: 'first_clear', label: '初クリア', desc: '初めてステージをクリアする', check: function (p) { return !!p.anyStageClearedEver; } },
+    { id: 'hanamaru_artisan', label: '花丸職人', desc: '満点でステージをクリアする', check: function (p) { return !!p.everPerfectClear; } },
+    { id: 'review_master', label: '復習の達人', desc: '苦手問題を5問攻略する', check: function (p) { return (p.totalWeakCleared || 0) >= 5; } },
+    { id: 'consistent_researcher', label: '継続の研究者', desc: '今月5日以上学習する', check: function (p) { return countDistinctDaysThisMonth(p.dailyStats) >= 5; } }
+  ];
+
+  var SAMPLE_STAGES = [
+    { number: 1, questions: [
+      { text: "日本で一番高い山はどこですか?", choices: ["富士山","北岳","槍ヶ岳"], correctIndex: 0,
+        explanation: "富士山は標高3776mで日本最高峰です。" },
+      { text: "次のうち、昆虫ではないものはどれですか?", choices: ["カブトムシ","クモ","トンボ","アリ"], correctIndex: 1,
+        explanation: "クモは脚が8本あり、昆虫(脚6本)ではなくクモ綱に分類されます。" },
+      { text: "1年は何ヶ月ですか?", choices: ["10ヶ月","12ヶ月","14ヶ月"], correctIndex: 1,
+        explanation: "1年は12ヶ月です。" },
+      { text: "日本の国花としてよく知られる花は何ですか?", choices: ["バラ","サクラ","チューリップ"], correctIndex: 1,
+        explanation: "サクラは日本の国花のひとつとして広く親しまれています。" },
+      { text: "水の化学式は何ですか?", choices: ["CO2","H2O","O2"], correctIndex: 1,
+        explanation: "水の化学式はH2O、水素2原子と酸素1原子からなります。" }
+    ]},
+    { number: 2, questions: [
+      { text: "光の速さはおよそ何km/秒ですか?", choices: ["3万km/秒","30万km/秒","300万km/秒","3000万km/秒"], correctIndex: 1,
+        explanation: "真空中の光速はおよそ秒速30万km(正確には299,792km/秒)です。" },
+      { text: "世界で最も人口が多い国はどこですか?", choices: ["中国","アメリカ","インド","インドネシア","ブラジル"], correctIndex: 2,
+        explanation: "2023年にインドが中国を上回り、世界最多の人口を持つ国となりました。" },
+      { text: "人間の体内で最も大きな臓器は何ですか?", choices: ["肝臓","皮膚","脳","肺"], correctIndex: 1,
+        explanation: "皮膚は人体最大の臓器とされています。" },
+      { text: "1ダースは何個ですか?", choices: ["10個","12個","15個"], correctIndex: 1,
+        explanation: "1ダースは12個です。" },
+      { text: "太陽系で最も大きい惑星はどれですか?", choices: ["地球","木星","土星","火星"], correctIndex: 1,
+        explanation: "木星は太陽系最大の惑星です。" }
+    ]}
+  ];
+
+  var state = {
+    stages: [],
+    setFingerprint: null,
+    fileData: { cleared: {}, stageHistory: {}, weak: {} },
+    profile: null,
+    playerKey: null,
+    playerName: '',
+    shuffleWithinStage: false,
+    timerEnabled: false,
+    timerSeconds: 15,
+    timerHandle: null,
+
+    stageIdxPlaying: null,
+    isReviewMode: false,
+    reviewLabel: '復習',
+    order: [],
+    current: 0,
+    score: 0,
+    answered: false,
+    log: [],
+    streak: 0,
+    maxStreak: 0,
+    currentChoiceOrder: [],
+    currentCorrectDisplayIdx: -1,
+
+    sessionGains: { exp: 0, missionsCompleted: [], titlesEarned: [], weakCleared: 0 },
+    levelBeforeSession: 1
+  };
+
+  var pendingFingerprint = null;
+
+  var screenUpload = document.getElementById('qz-screen-upload');
+  var screenPlayerSelect = document.getElementById('qz-screen-playerselect');
+  var screenStageMap = document.getElementById('qz-screen-stagemap');
+  var screenQuiz = document.getElementById('qz-screen-quiz');
+  var screenResult = document.getElementById('qz-screen-stageresult');
+  var statusArea = document.getElementById('qz-status-area');
+  var dropzone = document.getElementById('qz-dropzone');
+  var fileInput = document.getElementById('qz-file-input');
+  var sampleBtn = document.getElementById('qz-sample-btn');
+
+  function showScreen(name) {
+    screenUpload.classList.toggle('hidden', name !== 'upload');
+    screenPlayerSelect.classList.toggle('hidden', name !== 'playerselect');
+    screenStageMap.classList.toggle('hidden', name !== 'stagemap');
+    screenQuiz.classList.toggle('hidden', name !== 'quiz');
+    screenResult.classList.toggle('hidden', name !== 'result');
+  }
+
+  function escapeHtml(str) {
+    return String(str).replace(/[&<>"']/g, function (c) {
+      return ({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' })[c];
+    });
+  }
+  function pad2(n) { return String(n).padStart(2, '0'); }
+  function objectValues(obj) { return Object.keys(obj || {}).map(function (k) { return obj[k]; }); }
+
+  /* ---------------- Hashing / fingerprint ---------------- */
+
+  function hashStr(s) {
+    var h = 0;
+    for (var i = 0; i < s.length; i++) { h = (h * 31 + s.charCodeAt(i)) | 0; }
+    return Math.abs(h);
+  }
+  function computeFingerprint(questions) {
+    var raw = questions.length + '::' + questions.map(function (q) { return q.text; }).join('|');
+    return 'qz' + hashStr(raw) + '-' + questions.length;
+  }
+  function flattenStages(stages) {
+    var all = [];
+    stages.forEach(function (s) { s.questions.forEach(function (q) { all.push(q); }); });
+    return all;
+  }
+  function computeQid(q) {
+    return 'q' + hashStr((q.stageNumber || 0) + '|' + q.text);
+  }
+  function slugifyName(name) {
+    return encodeURIComponent(String(name).trim()).slice(0, 60);
+  }
+
+  /* ---------------- Dates ---------------- */
+
+  function todayStr() {
+    var d = new Date();
+    return d.getFullYear() + '-' + pad2(d.getMonth() + 1) + '-' + pad2(d.getDate());
+  }
+  function countDistinctDaysThisMonth(dailyStats) {
+    var now = new Date();
+    var prefix = now.getFullYear() + '-' + pad2(now.getMonth() + 1);
+    var count = 0;
+    Object.keys(dailyStats || {}).forEach(function (d) {
+      if (d.indexOf(prefix) === 0 && dailyStats[d].answered > 0) count++;
+    });
+    return count;
+  }
+
+  /* ---------------- Level system ---------------- */
+
+  function thresholdForLevel(L) { return 25 * L * (L - 1); }
+  function getLevelName(level) {
+    if (level === 1) return '見習い研究員';
+    if (level === 2) return '研究員';
+    if (level === 3) return '主任研究員';
+    if (level === 4) return '博士候補';
+    if (level === 5) return 'マスター研究者';
+    return '伝説の探究者';
+  }
+  function getLevelInfo(exp) {
+    var level = 1;
+    while (thresholdForLevel(level + 1) <= exp) level++;
+    var floor = thresholdForLevel(level);
+    var ceil = thresholdForLevel(level + 1);
+    return { level: level, name: getLevelName(level), floor: floor, ceil: ceil, into: exp - floor, span: ceil - floor, toNext: ceil - exp };
+  }
+
+  /* ---------------- Daily missions ---------------- */
+
+  function pickDailyMissions(dateStr) {
+    var h = hashStr(dateStr);
+    var n = MISSION_TEMPLATES.length;
+    var first = h % n;
+    var second = (first + 1 + (Math.floor(h / n) % (n - 1))) % n;
+    if (second === first) second = (second + 1) % n;
+    return [MISSION_TEMPLATES[first], MISSION_TEMPLATES[second]];
+  }
+
+  /* ---------------- Storage abstraction ----------------
+     Uses Claude's artifact storage (window.storage) when this app is open
+     inside a Claude chat. When opened as a standalone downloaded HTML file
+     in a regular browser, window.storage does not exist, so we fall back
+     to the browser's own localStorage (which works fine outside Claude.ai
+     and keeps records per browser/device). Either way, callers just get a
+     Promise<string|null> from storageGet and don't need to know which one
+     is in use.
+  */
+  var LOCAL_PREFIX = 'qzapp:';
+
+  function storageGet(key) {
+    if (window.storage) {
+      return window.storage.get(key, false).then(function (res) {
+        return res && res.value != null ? res.value : null;
+      }).catch(function () { return null; });
+    }
+    try {
+      return Promise.resolve(localStorage.getItem(LOCAL_PREFIX + key));
+    } catch (e) {
+      return Promise.resolve(null);
+    }
+  }
+  function storageSet(key, value) {
+    if (window.storage) {
+      return window.storage.set(key, value, false).catch(function () {});
+    }
+    try {
+      localStorage.setItem(LOCAL_PREFIX + key, value);
+    } catch (e) { /* storage full/blocked: fail silently, same as the Claude-storage path */ }
+    return Promise.resolve();
+  }
+
+  /* ---------------- Personal storage: players / profile / per-file data ---------------- */
+
+  function loadPlayers() {
+    return storageGet('players-list').then(function (value) {
+      if (!value) return [];
+      try {
+        var arr = JSON.parse(value);
+        return Array.isArray(arr) ? arr : [];
+      } catch (e) { return []; }
+    });
+  }
+  function savePlayers(list) {
+    storageSet('players-list', JSON.stringify(list));
+  }
+
+  function defaultProfile(obj) {
+    obj = obj || {};
+    if (typeof obj.totalAnswered !== 'number') obj.totalAnswered = 0;
+    if (typeof obj.totalCorrect !== 'number') obj.totalCorrect = 0;
+    if (typeof obj.exp !== 'number') obj.exp = 0;
+    if (!Array.isArray(obj.titles)) obj.titles = [];
+    if (typeof obj.dailyStats !== 'object' || !obj.dailyStats) obj.dailyStats = {};
+    if (typeof obj.totalWeakCleared !== 'number') obj.totalWeakCleared = 0;
+    if (typeof obj.anyStageClearedEver !== 'boolean') obj.anyStageClearedEver = false;
+    if (typeof obj.everPerfectClear !== 'boolean') obj.everPerfectClear = false;
+    return obj;
+  }
+  function loadProfile(playerKey) {
+    if (!playerKey) return Promise.resolve(defaultProfile(null));
+    return storageGet('profile:' + playerKey).then(function (value) {
+      if (!value) return defaultProfile(null);
+      try { return defaultProfile(JSON.parse(value)); } catch (e) { return defaultProfile(null); }
+    });
+  }
+  function saveProfile(playerKey, profile) {
+    if (!playerKey) return;
+    var keys = Object.keys(profile.dailyStats).sort();
+    if (keys.length > 30) {
+      keys.slice(0, keys.length - 30).forEach(function (k) { delete profile.dailyStats[k]; });
+    }
+    storageSet('profile:' + playerKey, JSON.stringify(profile));
+  }
+
+  function defaultFileData(obj) {
+    obj = obj || {};
+    if (typeof obj.cleared !== 'object' || !obj.cleared) obj.cleared = {};
+    if (typeof obj.stageHistory !== 'object' || !obj.stageHistory) obj.stageHistory = {};
+    if (typeof obj.weak !== 'object' || !obj.weak) obj.weak = {};
+    return obj;
+  }
+  function loadFileData(playerKey, fp) {
+    if (!playerKey || !fp) return Promise.resolve(defaultFileData(null));
+    return storageGet('filedata:' + playerKey + ':' + fp).then(function (value) {
+      if (!value) return defaultFileData(null);
+      try { return defaultFileData(JSON.parse(value)); } catch (e) { return defaultFileData(null); }
+    });
+  }
+  function saveFileData(playerKey, fp, fd) {
+    if (!playerKey || !fp) return;
+    storageSet('filedata:' + playerKey + ':' + fp, JSON.stringify(fd));
+  }
+
+  /* ---------------- Progress processing (EXP / weak bank / missions / titles) ---------------- */
+
+  function checkAndAwardTitles() {
+    TITLE_DEFS.forEach(function (t) {
+      if (state.profile.titles.indexOf(t.id) === -1 && t.check(state.profile)) {
+        state.profile.titles.push(t.id);
+        state.profile.exp += EXP_TITLE;
+        state.sessionGains.exp += EXP_TITLE;
+        state.sessionGains.titlesEarned.push({ id: t.id, label: t.label });
+      }
+    });
+  }
+
+  function evaluateDailyMissions(today) {
+    var day = state.profile.dailyStats[today];
+    if (!day) return;
+    pickDailyMissions(today).forEach(function (m) {
+      if (day.missionsCompleted.indexOf(m.id) !== -1) return;
+      var progress = day[m.metric] || 0;
+      if (progress >= m.target) {
+        day.missionsCompleted.push(m.id);
+        state.profile.exp += EXP_MISSION;
+        state.sessionGains.exp += EXP_MISSION;
+        state.sessionGains.missionsCompleted.push({ id: m.id, label: m.label });
+      }
+    });
+  }
+
+  // Called once per answered question (correct, incorrect, or timeout). Returns the EXP
+  // gained from this single answer (used for the small "+N EXP" hint on the verdict line).
+  function processAnswerForProgress(q, isCorrect) {
+    var today = todayStr();
+    if (!state.profile.dailyStats[today]) {
+      state.profile.dailyStats[today] = { answered: 0, correct: 0, comboMax: 0, weakCleared: 0, missionsCompleted: [] };
+    }
+    var day = state.profile.dailyStats[today];
+
+    state.profile.totalAnswered++;
+    day.answered++;
+    if (isCorrect) { state.profile.totalCorrect++; day.correct++; }
+    day.comboMax = Math.max(day.comboMax, state.streak);
+
+    var qid = computeQid(q);
+    var fd = state.fileData;
+    var weakEntry = fd.weak[qid];
+    var isReviewConquest = false;
+
+    if (!isCorrect) {
+      if (!weakEntry) {
+        weakEntry = { stageNumber: q.stageNumber, text: q.text, choices: q.choices, correctIndex: q.correctIndex, explanation: q.explanation, missCount: 0, cleared: false, lastMissedAt: 0 };
+        fd.weak[qid] = weakEntry;
+      }
+      weakEntry.missCount++;
+      weakEntry.lastMissedAt = Date.now();
+      weakEntry.cleared = false;
+    } else if (weakEntry && !weakEntry.cleared) {
+      weakEntry.cleared = true;
+      isReviewConquest = true;
+      day.weakCleared++;
+      state.profile.totalWeakCleared = (state.profile.totalWeakCleared || 0) + 1;
+      state.sessionGains.weakCleared++;
+    }
+
+    var gained = isCorrect ? (isReviewConquest ? EXP_REVIEW_CORRECT : EXP_CORRECT) : EXP_INCORRECT;
+    state.profile.exp += gained;
+    state.sessionGains.exp += gained;
+
+    checkAndAwardTitles();
+    evaluateDailyMissions(today);
+
+    return gained;
+  }
+
+  /* ---------------- "Almost there" goal lines ---------------- */
+
+  function titleRemaining(t, profile) {
+    if (t.id === 'review_master') return Math.max(0, 5 - (profile.totalWeakCleared || 0));
+    if (t.id === 'consistent_researcher') return Math.max(0, 5 - countDistinctDaysThisMonth(profile.dailyStats));
+    return null;
+  }
+
+  function buildGoalLines() {
+    var lines = [];
+    var li = getLevelInfo(state.profile.exp);
+    if (li.toNext > 0) lines.push('あと' + li.toNext + 'EXPでレベルアップ!');
+
+    var today = todayStr();
+    var day = state.profile.dailyStats[today] || { answered: 0, correct: 0, comboMax: 0, weakCleared: 0, missionsCompleted: [] };
+    pickDailyMissions(today).forEach(function (m) {
+      if (day.missionsCompleted.indexOf(m.id) === -1) {
+        var remaining = Math.max(0, m.target - (day[m.metric] || 0));
+        if (remaining > 0) lines.push('あと' + remaining + '問で今日のミッション「' + m.label + '」達成!');
+      }
+    });
+
+    var bestLine = null, bestRemaining = Infinity;
+    TITLE_DEFS.forEach(function (t) {
+      if (state.profile.titles.indexOf(t.id) === -1) {
+        var remaining = titleRemaining(t, state.profile);
+        if (remaining != null && remaining > 0 && remaining < bestRemaining) {
+          bestRemaining = remaining;
+          bestLine = 'あと' + remaining + '問で称号「' + t.label + '」獲得!';
+        }
+      }
+    });
+    if (bestLine) lines.push(bestLine);
+
+    return lines.slice(0, 3);
+  }
+
+  /* ---------------- Upload & parsing ---------------- */
+
+  dropzone.addEventListener('click', function () { fileInput.click(); });
+  dropzone.addEventListener('keydown', function (e) {
+    if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); fileInput.click(); }
+  });
+  ['dragover','dragenter'].forEach(function (ev) {
+    dropzone.addEventListener(ev, function (e) { e.preventDefault(); dropzone.classList.add('drag'); });
+  });
+  ['dragleave','dragend','drop'].forEach(function (ev) {
+    dropzone.addEventListener(ev, function () { dropzone.classList.remove('drag'); });
+  });
+  dropzone.addEventListener('drop', function (e) {
+    e.preventDefault();
+    var f = e.dataTransfer.files && e.dataTransfer.files[0];
+    if (f) handleFile(f);
+  });
+  fileInput.addEventListener('change', function (e) {
+    var f = e.target.files && e.target.files[0];
+    if (f) handleFile(f);
+  });
+  sampleBtn.addEventListener('click', function () {
+    var stages = SAMPLE_STAGES.map(function (s) { return { number: s.number, questions: s.questions.map(function (q) { return Object.assign({}, q, { stageNumber: s.number }); }) }; });
+    pendingFingerprint = computeFingerprint(flattenStages(stages));
+    renderLoadResult({ stages: stages, errors: [], notices: [] }, true);
+  });
+
+  function handleFile(file) {
+    statusArea.innerHTML = '';
+    var reader = new FileReader();
+    reader.onload = function (e) {
+      try {
+        var data = new Uint8Array(e.target.result);
+        var workbook = XLSX.read(data, { type: 'array' });
+        var sheetName = workbook.SheetNames[0];
+        var sheet = workbook.Sheets[sheetName];
+        var rows = XLSX.utils.sheet_to_json(sheet, { defval: '' });
+        var result = buildStages(rows);
+        if (result.stages.length === 0) {
+          renderLoadError(result.errors, rows.length === 0);
+        } else {
+          pendingFingerprint = computeFingerprint(flattenStages(result.stages));
+          renderLoadResult(result, false);
+        }
+      } catch (err) {
+        renderLoadError(['ファイルの読み込みに失敗しました。Excel形式(.xlsx)で保存し直してから、もう一度お試しください。'], false, true);
+      }
+    };
+    reader.onerror = function () {
+      renderLoadError(['ファイルを読み込めませんでした。もう一度お試しください。'], false, true);
+    };
+    reader.readAsArrayBuffer(file);
+  }
+
+  function buildStages(rows) {
+    var groups = {};
+    var errors = [];
+    var notices = [];
+
+    rows.forEach(function (row, idx) {
+      var excelRow = idx + 2;
+      var qText = String(row['問題文'] == null ? '' : row['問題文']).trim();
+      if (!qText) return; // blank separator row, skip silently
+
+      var stageRaw = row['ステージ'];
+      var stageNum = parseInt(stageRaw, 10);
+      if (isNaN(stageNum) || stageNum < 1) {
+        errors.push(excelRow + '行目: 「ステージ」列に1以上の数字が入っていないため、この行は読み込めませんでした。');
+        return;
+      }
+
+      var rawChoices = [];
+      for (var n = 1; n <= 6; n++) {
+        var key = '選択肢' + n;
+        var v = row[key];
+        var t = v == null ? '' : String(v).trim();
+        if (t !== '') rawChoices.push({ colNum: n, text: t });
+      }
+      if (rawChoices.length < 2) {
+        errors.push(excelRow + '行目: 選択肢が2つ未満のため、この行は読み込めませんでした。');
+        return;
+      }
+
+      var correctRaw = row['正解'];
+      var correctNum = parseInt(correctRaw, 10);
+      if (isNaN(correctNum)) {
+        errors.push(excelRow + '行目: 「正解」に1〜6の数字が入っていないため、この行は読み込めませんでした。');
+        return;
+      }
+      var correctEntry = null;
+      for (var i = 0; i < rawChoices.length; i++) {
+        if (rawChoices[i].colNum === correctNum) { correctEntry = rawChoices[i]; break; }
+      }
+      if (!correctEntry) {
+        errors.push(excelRow + '行目: 「正解」(' + correctRaw + ')に対応する選択肢が見つからないため、この行は読み込めませんでした。');
+        return;
+      }
+
+      var explanation = row['解説'] == null ? '' : String(row['解説']).trim();
+      var question = {
+        text: qText,
+        choices: rawChoices.map(function (c) { return c.text; }),
+        correctIndex: rawChoices.indexOf(correctEntry),
+        explanation: explanation,
+        stageNumber: stageNum
+      };
+
+      if (!groups[stageNum]) groups[stageNum] = [];
+      groups[stageNum].push(question);
+    });
+
+    var stageNumbers = Object.keys(groups).map(Number).sort(function (a, b) { return a - b; });
+    var stages = stageNumbers.map(function (num) { return { number: num, questions: groups[num] }; });
+
+    stages.forEach(function (s) {
+      if (s.questions.length !== 10) {
+        notices.push('ステージ' + s.number + 'は' + s.questions.length + '問です(目安は10問です)。');
+      }
+    });
+
+    return { stages: stages, errors: errors, notices: notices };
+  }
+
+  function renderLoadError(errors, emptyFile, parseFailed) {
+    var html = '<div class="qz-panel error">';
+    if (parseFailed) {
+      html += '<div>' + escapeHtml(errors[0]) + '</div>';
+    } else if (emptyFile) {
+      html += '<div>有効な問題が見つかりませんでした。シートにデータが入っているか確認してください。</div>';
+    } else {
+      html += '<div><strong>有効な問題が見つかりませんでした。</strong></div><ul>';
+      errors.forEach(function (e) { html += '<li>' + escapeHtml(e) + '</li>'; });
+      html += '</ul>';
+    }
+    html += '</div>';
+    statusArea.innerHTML = html;
+  }
+
+  function renderLoadResult(result, isSample) {
+    var totalQ = 0;
+    result.stages.forEach(function (s) { totalQ += s.questions.length; });
+
+    var html = '<div class="qz-panel ok"><div class="qz-panel-row">';
+    html += '<span><strong>' + result.stages.length + 'ステージ</strong>(合計' + totalQ + '問)' + (isSample ? '(サンプル)' : '') + 'を読み込みました。</span>';
+    html += '<button class="qz-btn qz-btn-primary" id="qz-start-btn" type="button">プレイヤー選択へ進む</button>';
+    html += '</div>';
+    html += '<div class="qz-stage-breakdown">';
+    result.stages.forEach(function (s) { html += '<span class="qz-stage-chip">ステージ' + s.number + ': ' + s.questions.length + '問</span>'; });
+    html += '</div>';
+    html += '<label class="qz-checkbox-row"><input type="checkbox" id="qz-shuffle-check" /> 各ステージ内の出題順をシャッフルする</label>';
+    html += '<div class="qz-timer-option-row">';
+    html += '<label class="qz-checkbox-row"><input type="checkbox" id="qz-timer-check" /> 制限時間を設ける</label>';
+    html += '<select id="qz-timer-seconds"><option value="10">10秒</option><option value="15" selected>15秒</option><option value="20">20秒</option><option value="30">30秒</option></select>';
+    html += '</div>';
+    html += '</div>';
+
+    if (result.notices && result.notices.length > 0) {
+      html += '<div class="qz-panel warn"><div><strong>確認してください:</strong></div><ul>';
+      result.notices.forEach(function (n) { html += '<li>' + escapeHtml(n) + '</li>'; });
+      html += '</ul></div>';
+    }
+    if (result.errors && result.errors.length > 0) {
+      html += '<div class="qz-panel warn"><div><strong>' + result.errors.length + '件</strong>の行は読み込めませんでした(該当行はスキップされました)。</div>';
+      html += '<ul>';
+      result.errors.forEach(function (e) { html += '<li>' + escapeHtml(e) + '</li>'; });
+      html += '</ul></div>';
+    }
+    statusArea.innerHTML = html;
+
+    document.getElementById('qz-start-btn').addEventListener('click', function () {
+      state.stages = result.stages;
+      state.setFingerprint = pendingFingerprint;
+      state.shuffleWithinStage = document.getElementById('qz-shuffle-check').checked;
+      state.timerEnabled = document.getElementById('qz-timer-check').checked;
+      state.timerSeconds = parseInt(document.getElementById('qz-timer-seconds').value, 10);
+      showScreen('playerselect');
+      renderPlayerSelect();
+    });
+  }
+
+  /* ---------------- Player select ---------------- */
+
+  function renderPlayerSelect() {
+    var listEl = document.getElementById('qz-player-list');
+    listEl.innerHTML = '';
+    document.getElementById('qz-player-name-input').value = '';
+    loadPlayers().then(function (list) {
+      list.forEach(function (p) {
+        var card = document.createElement('button');
+        card.type = 'button';
+        card.className = 'qz-stage-card';
+        card.innerHTML =
+          '<span class="qz-stage-num">PLAYER</span>' +
+          '<span class="qz-stage-info"><span class="label"></span></span>' +
+          '<span class="qz-stage-status open-tag">続きから</span>';
+        card.querySelector('.label').textContent = p.name;
+        card.addEventListener('click', function () { selectPlayer(p.key, p.name); });
+        listEl.appendChild(card);
+      });
+    });
+  }
+
+  function selectPlayer(key, name) {
+    state.playerKey = key;
+    state.playerName = name;
+    Promise.all([loadProfile(key), loadFileData(key, state.setFingerprint)]).then(function (arr) {
+      state.profile = arr[0];
+      state.fileData = arr[1];
+      document.getElementById('qz-dashboard-title').textContent = name + 'さんのダッシュボード';
+      showScreen('stagemap');
+      renderStageMap();
+    });
+  }
+
+  document.getElementById('qz-player-start-btn').addEventListener('click', function () {
+    var input = document.getElementById('qz-player-name-input');
+    var name = input.value.trim();
+    if (!name) return;
+    var key = slugifyName(name);
+    loadPlayers().then(function (list) {
+      if (!list.some(function (p) { return p.key === key; })) {
+        list.push({ key: key, name: name });
+        savePlayers(list);
+      }
+      selectPlayer(key, name);
+    });
+  });
+  document.getElementById('qz-player-name-input').addEventListener('keydown', function (e) {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      document.getElementById('qz-player-start-btn').click();
+    }
+  });
+  document.getElementById('qz-player-back-btn').addEventListener('click', function () {
+    statusArea.innerHTML = '';
+    fileInput.value = '';
+    pendingFingerprint = null;
+    showScreen('upload');
+  });
+
+  /* ---------------- Dashboard rendering ---------------- */
+
+  function renderDashboardLevel() {
+    var li = getLevelInfo(state.profile.exp);
+    document.getElementById('qz-level-num').textContent = li.level;
+    document.getElementById('qz-level-name').textContent = li.name;
+    document.getElementById('qz-level-illustration').innerHTML = levelIllustrationSVG(li.level);
+    var pctFill = li.span > 0 ? Math.min(100, Math.round((li.into / li.span) * 100)) : 100;
+    document.getElementById('qz-exp-fill').style.width = pctFill + '%';
+    document.getElementById('qz-exp-text').textContent = 'EXP ' + state.profile.exp + '(あと' + li.toNext + 'で次のレベル)';
+  }
+
+  function renderDashboardMissions() {
+    var today = todayStr();
+    var day = state.profile.dailyStats[today] || { answered: 0, correct: 0, comboMax: 0, weakCleared: 0, missionsCompleted: [] };
+    var listEl = document.getElementById('qz-mission-list');
+    listEl.innerHTML = '';
+    pickDailyMissions(today).forEach(function (m) {
+      var progress = day[m.metric] || 0;
+      var done = day.missionsCompleted.indexOf(m.id) !== -1;
+      var row = document.createElement('div');
+      row.className = 'qz-mission-row';
+      row.innerHTML = '<span class="label"></span><span class="prog"></span>';
+      row.querySelector('.label').textContent = m.label;
+      row.querySelector('.prog').textContent = Math.min(progress, m.target) + '/' + m.target;
+      if (done) {
+        var stamp = document.createElement('span');
+        stamp.className = 'qz-mission-stamp';
+        stamp.textContent = '完了';
+        row.appendChild(stamp);
+      }
+      listEl.appendChild(row);
+    });
+  }
+
+  function getUnclearedWeak() {
+    return objectValues(state.fileData.weak).filter(function (w) { return !w.cleared; });
+  }
+
+  function renderDashboardWeak() {
+    var uncleared = getUnclearedWeak();
+    document.getElementById('qz-weak-summary').textContent = uncleared.length > 0
+      ? '次に攻略すべき問題が' + uncleared.length + '問あります。'
+      : '未攻略の問題はありません。今は良い状態です。';
+    document.getElementById('qz-weak-review-btn').disabled = uncleared.length === 0;
+    document.getElementById('qz-recommend-btn').disabled = uncleared.length === 0;
+  }
+
+  function renderDashboardTitles() {
+    var earned = state.profile.titles || [];
+    document.getElementById('qz-title-count').textContent = earned.length + '/' + TITLE_DEFS.length;
+    var listEl = document.getElementById('qz-title-chip-list');
+    listEl.innerHTML = '';
+    TITLE_DEFS.forEach(function (t) {
+      var got = earned.indexOf(t.id) !== -1;
+      var item = document.createElement('div');
+      item.className = 'qz-title-chip-item' + (got ? '' : ' locked');
+      item.title = t.desc;
+      item.innerHTML = titleBadgeSVG(t.id, got) + '<span class="chip-label"></span>';
+      item.querySelector('.chip-label').textContent = got ? t.label : '???';
+      listEl.appendChild(item);
+    });
+  }
+
+  function renderDashboardGoals() {
+    var goals = buildGoalLines();
+    var listEl = document.getElementById('qz-goal-list');
+    listEl.innerHTML = '';
+    if (goals.length === 0) {
+      listEl.innerHTML = '<li>今のところ目標まであと少し、というものはありません。引き続き挑戦しましょう。</li>';
+    } else {
+      goals.forEach(function (g) {
+        var li = document.createElement('li');
+        li.textContent = g;
+        listEl.appendChild(li);
+      });
+    }
+  }
+
+  document.getElementById('qz-weak-review-btn').addEventListener('click', function () {
+    var weakList = getUnclearedWeak();
+    if (weakList.length === 0) return;
+    startStagePlay(weakList, { isReviewMode: true, reviewLabel: '未攻略問題の復習' });
+  });
+  document.getElementById('qz-recommend-btn').addEventListener('click', function () {
+    var weakList = getUnclearedWeak();
+    if (weakList.length === 0) return;
+    weakList.sort(function (a, b) { return (b.missCount - a.missCount) || (b.lastMissedAt - a.lastMissedAt); });
+    startStagePlay(weakList.slice(0, 5), { isReviewMode: true, reviewLabel: 'おすすめ復習' });
+  });
+
+  /* ---------------- Stage map ---------------- */
+
+  function renderStageMap() {
+    renderDashboardLevel();
+    renderDashboardMissions();
+    renderDashboardWeak();
+    renderDashboardTitles();
+    renderDashboardGoals();
+
+    var listEl = document.getElementById('qz-stage-list');
+    listEl.innerHTML = '';
+    state.stages.forEach(function (stage, idx) {
+      var clearedInfo = state.fileData.cleared[stage.number];
+      var threshold = Math.ceil(stage.questions.length * 0.8);
+
+      var card = document.createElement('button');
+      card.type = 'button';
+      card.className = 'qz-stage-card' + (clearedInfo ? ' cleared' : '');
+
+      var statusHtml = clearedInfo
+        ? '<span class="qz-stage-status cleared-tag">クリア済み ' + clearedInfo.score + '/' + clearedInfo.total + '</span>'
+        : '<span class="qz-stage-status open-tag">挑戦可能</span>';
+
+      card.innerHTML =
+        '<span class="qz-stage-num">STAGE ' + stage.number + '</span>' +
+        '<span class="qz-stage-info"><span class="label"></span><span class="sub"></span></span>' +
+        statusHtml;
+      card.querySelector('.label').textContent = 'ステージ ' + stage.number;
+      card.querySelector('.sub').textContent = stage.questions.length + '問・クリアは' + threshold + '問以上正解';
+
+      card.addEventListener('click', function () {
+        var qs = state.shuffleWithinStage ? shuffleArray(stage.questions) : stage.questions.slice();
+        startStagePlay(qs, { stageIdx: idx, isReviewMode: false });
+      });
+      listEl.appendChild(card);
+    });
+  }
+
+  document.getElementById('qz-map-back-btn').addEventListener('click', function () {
+    statusArea.innerHTML = '';
+    fileInput.value = '';
+    pendingFingerprint = null;
+    showScreen('upload');
+  });
+  document.getElementById('qz-switch-player-btn').addEventListener('click', function () {
+    if (state.timerHandle) { clearInterval(state.timerHandle); state.timerHandle = null; }
+    saveProfile(state.playerKey, state.profile);
+    if (state.setFingerprint) saveFileData(state.playerKey, state.setFingerprint, state.fileData);
+    showScreen('playerselect');
+    renderPlayerSelect();
+  });
+
+  /* ---------------- Quiz flow ---------------- */
+
+  function shuffleArray(arr) {
+    var a = arr.slice();
+    for (var i = a.length - 1; i > 0; i--) {
+      var j = Math.floor(Math.random() * (i + 1));
+      var tmp = a[i]; a[i] = a[j]; a[j] = tmp;
+    }
+    return a;
+  }
+
+  function startStagePlay(questionsList, opts) {
+    opts = opts || {};
+    state.order = questionsList.slice();
+    state.stageIdxPlaying = (opts.stageIdx != null) ? opts.stageIdx : (opts.isReviewMode ? null : state.stageIdxPlaying);
+    state.isReviewMode = !!opts.isReviewMode;
+    state.reviewLabel = opts.reviewLabel || '復習';
+    state.current = 0;
+    state.score = 0;
+    state.log = [];
+    state.streak = 0;
+    state.maxStreak = 0;
+    state.sessionGains = { exp: 0, missionsCompleted: [], titlesEarned: [], weakCleared: 0 };
+    state.levelBeforeSession = getLevelInfo(state.profile.exp).level;
+    showScreen('quiz');
+    renderQuestion();
+  }
+
+  function goToStageMap() {
+    if (state.timerHandle) { clearInterval(state.timerHandle); state.timerHandle = null; }
+    saveProfile(state.playerKey, state.profile);
+    if (state.setFingerprint) saveFileData(state.playerKey, state.setFingerprint, state.fileData);
+    showScreen('stagemap');
+    renderStageMap();
+  }
+
+  document.getElementById('qz-back-btn').addEventListener('click', function () {
+    if (state.timerHandle) { clearInterval(state.timerHandle); state.timerHandle = null; }
+    goToStageMap();
+  });
+
+  function currentQuestion() { return state.order[state.current]; }
+
+  function updateScoreDisplay() {
+    var el = document.getElementById('qz-score');
+    var html = '正解 ' + state.score;
+    if (state.streak >= 2) {
+      html += '<span class="qz-combo-tag">' + state.streak + '連続正解</span>';
+    }
+    el.innerHTML = html;
+  }
+
+  function startTimer() {
+    var remaining = state.timerSeconds;
+    var fill = document.getElementById('qz-timer-fill');
+    var text = document.getElementById('qz-timer-text');
+    fill.style.width = '100%';
+    fill.classList.remove('low');
+    text.classList.remove('low');
+    text.textContent = '残り ' + remaining + '秒';
+    state.timerHandle = setInterval(function () {
+      remaining -= 0.2;
+      if (remaining <= 0) {
+        remaining = 0;
+        clearInterval(state.timerHandle);
+        state.timerHandle = null;
+        fill.style.width = '0%';
+        text.textContent = '時間切れ';
+        text.classList.add('low');
+        handleAnswer(-1);
+        return;
+      }
+      fill.style.width = (remaining / state.timerSeconds * 100) + '%';
+      text.textContent = '残り ' + Math.ceil(remaining) + '秒';
+      if (remaining <= 5) { fill.classList.add('low'); text.classList.add('low'); }
+    }, 200);
+  }
+
+  function renderQuestion() {
+    if (state.timerHandle) { clearInterval(state.timerHandle); state.timerHandle = null; }
+    var total = state.order.length;
+    var q = currentQuestion();
+    state.answered = false;
+
+    var label = state.isReviewMode ? state.reviewLabel :
+      (state.stageIdxPlaying != null ? 'ステージ' + state.stages[state.stageIdxPlaying].number : '');
+    document.getElementById('qz-counter').textContent =
+      label + ' ・問 ' + pad2(state.current + 1) + ' / ' + pad2(total);
+    updateScoreDisplay();
+    document.getElementById('qz-progress-fill').style.width = (state.current / total * 100) + '%';
+    document.getElementById('qz-qnum').textContent = '問 ' + (state.current + 1);
+    document.getElementById('qz-qtext').textContent = q.text;
+
+    // Randomize the displayed order of choices each time a question is shown,
+    // while keeping track of which displayed position holds the correct answer.
+    var order = shuffleArray(q.choices.map(function (_, i) { return i; }));
+    state.currentChoiceOrder = order;
+    state.currentCorrectDisplayIdx = order.indexOf(q.correctIndex);
+
+    var choicesEl = document.getElementById('qz-choices');
+    choicesEl.innerHTML = '';
+    order.forEach(function (origIdx, displayIdx) {
+      var btn = document.createElement('button');
+      btn.className = 'qz-choice';
+      btn.type = 'button';
+      btn.innerHTML =
+        '<span class="qz-tag-wrap"><span class="qz-tag">' + TAGS[displayIdx] + '</span></span>' +
+        '<span class="qz-choice-text"></span>';
+      btn.querySelector('.qz-choice-text').textContent = q.choices[origIdx];
+      btn.addEventListener('click', function () { handleAnswer(displayIdx); });
+      choicesEl.appendChild(btn);
+    });
+
+    var explainEl = document.getElementById('qz-explain');
+    explainEl.classList.remove('visible');
+    document.getElementById('qz-verdict').textContent = '';
+    document.getElementById('qz-explain-body').textContent = '';
+
+    var nextBtn = document.getElementById('qz-next-btn');
+    nextBtn.disabled = true;
+    nextBtn.textContent = (state.current === total - 1) ? '結果を見る' : '次の問題へ';
+    nextBtn.onclick = function () { advance(); };
+
+    var timerRow = document.getElementById('qz-timer-row');
+    if (state.timerEnabled) {
+      timerRow.classList.remove('hidden');
+      startTimer();
+    } else {
+      timerRow.classList.add('hidden');
+    }
+  }
+
+  function handleAnswer(selectedIdx) {
+    if (state.answered) return;
+    state.answered = true;
+    if (state.timerHandle) { clearInterval(state.timerHandle); state.timerHandle = null; }
+
+    var q = currentQuestion();
+    var isCorrect = selectedIdx === state.currentCorrectDisplayIdx;
+    if (isCorrect) {
+      state.score++;
+      state.streak++;
+      if (state.streak > state.maxStreak) state.maxStreak = state.streak;
+    } else {
+      state.streak = 0;
+    }
+    state.log.push({ question: q, selectedIdx: selectedIdx, isCorrect: isCorrect });
+
+    var gainedExp = processAnswerForProgress(q, isCorrect);
+    updateScoreDisplay();
+
+    var buttons = document.querySelectorAll('#qz-choices .qz-choice');
+    buttons.forEach(function (btn, idx) {
+      btn.classList.add('disabled');
+      if (idx === state.currentCorrectDisplayIdx) {
+        btn.classList.add('is-correct');
+        addStamp(btn, 'correct');
+      } else if (idx === selectedIdx) {
+        btn.classList.add('is-wrong');
+        addStamp(btn, 'wrong');
+      } else {
+        btn.classList.add('dim');
+      }
+    });
+
+    var verdictEl = document.getElementById('qz-verdict');
+    var verdictLabel = selectedIdx === -1 ? '⏱ 時間切れ' : (isCorrect ? '◯ 正解' : '✕ 不正解');
+    verdictEl.textContent = verdictLabel + '  +' + gainedExp + 'EXP';
+    document.getElementById('qz-explain-body').textContent = q.explanation || '(この問題には解説がありません)';
+    document.getElementById('qz-explain').classList.add('visible');
+    document.getElementById('qz-next-btn').disabled = false;
+  }
+
+  function addStamp(choiceBtn, kind) {
+    var wrap = choiceBtn.querySelector('.qz-tag-wrap');
+    var svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+    svg.setAttribute('viewBox', '0 0 60 60');
+    svg.setAttribute('class', 'qz-stamp ' + kind);
+    if (kind === 'correct') {
+      svg.innerHTML = '<path d="M30 6 C46 6 54 18 53 31 C52 45 41 54 29 54 C16 54 6 44 7 30 C8 16 17 6 30 6" />';
+    } else {
+      svg.innerHTML = '<path d="M11 11 L49 49" /><path d="M49 12 L10 48" />';
+    }
+    wrap.appendChild(svg);
+  }
+
+  function advance() {
+    state.current++;
+    if (state.current >= state.order.length) {
+      showStageResult();
+    } else {
+      renderQuestion();
+    }
+  }
+
+  function renderStamp(pct) {
+    var area = document.getElementById('qz-stamp-area');
+    if (pct === 100) {
+      area.innerHTML = HANAMARU_SVG + '<div class="qz-stamp-caption">花丸です!</div>';
+    } else if (pct >= 80) {
+      area.innerHTML = '<div class="qz-hanko">よくでき<br>ました</div>';
+    } else if (pct >= 50) {
+      area.innerHTML = '<div class="qz-hanko soft">がんばり<br>ました</div>';
+    } else {
+      area.innerHTML = '<div class="qz-encourage">これからがんばろう。もう一度チャレンジしてみましょう。</div>';
+    }
+  }
+
+  function renderReviewList() {
+    var reviewEl = document.getElementById('qz-review');
+    reviewEl.innerHTML = '';
+    state.log.forEach(function (entry, i) {
+      var q = entry.question;
+      var details = document.createElement('details');
+      details.className = 'qz-review-item';
+      var summary = document.createElement('summary');
+      summary.innerHTML =
+        '<span class="qz-review-mark">' + (entry.isCorrect ? '◯' : '✕') + '</span>' +
+        '<span class="qz-review-q"></span>';
+      summary.querySelector('.qz-review-q').textContent = '問' + (i + 1) + '　' + q.text;
+      var body = document.createElement('div');
+      body.className = 'qz-review-body';
+      var labelSpan = document.createElement('span');
+      labelSpan.className = 'label';
+      labelSpan.textContent = '正解: ' + q.choices[q.correctIndex];
+      var expDiv = document.createElement('div');
+      expDiv.textContent = q.explanation || '(この問題には解説がありません)';
+      body.appendChild(labelSpan);
+      body.appendChild(expDiv);
+      details.appendChild(summary);
+      details.appendChild(body);
+      reviewEl.appendChild(details);
+    });
+  }
+
+  function addActionButton(container, label, cls, handler, disabled) {
+    var b = document.createElement('button');
+    b.className = 'qz-btn ' + cls;
+    b.type = 'button';
+    b.textContent = label;
+    if (disabled) b.disabled = true;
+    b.addEventListener('click', handler);
+    container.appendChild(b);
+    return b;
+  }
+
+  function retrySameStage() {
+    var idx = state.stageIdxPlaying;
+    var qs = state.shuffleWithinStage ? shuffleArray(state.stages[idx].questions) : state.stages[idx].questions.slice();
+    startStagePlay(qs, { stageIdx: idx, isReviewMode: false });
+  }
+
+  /* ---------------- Growth panel (EXP / level-up / titles / goals) ---------------- */
+
+  function renderGrowthPanel() {
+    var el = document.getElementById('qz-growth-panel');
+    var li = getLevelInfo(state.profile.exp);
+    var leveledUp = li.level > state.levelBeforeSession;
+    var html = '';
+
+    if (state.sessionGains.exp > 0) {
+      html += '<div class="qz-growth-line highlight">獲得EXP: +' + state.sessionGains.exp + '</div>';
+    }
+    if (leveledUp) {
+      html += '<div class="qz-levelup-banner">' + levelIllustrationSVG(li.level) +
+        '<div>レベルアップ! Lv' + li.level + ' ' + escapeHtml(li.name) + '</div></div>';
+    }
+    html += '<div class="qz-growth-line">現在 Lv' + li.level + ' ' + escapeHtml(li.name) + '(あと' + li.toNext + 'EXPで次のレベル)</div>';
+
+    state.sessionGains.titlesEarned.forEach(function (t) {
+      html += '<div class="qz-title-earned-banner">' + titleBadgeSVG(t.id, true) +
+        '<div>新しい称号を獲得: <b>「' + escapeHtml(t.label) + '」</b></div></div>';
+    });
+    state.sessionGains.missionsCompleted.forEach(function (m) {
+      html += '<div class="qz-growth-line highlight">今日のミッション「' + escapeHtml(m.label) + '」達成!(+' + EXP_MISSION + 'EXP)</div>';
+    });
+    if (state.sessionGains.weakCleared > 0) {
+      html += '<div class="qz-growth-line">苦手問題を' + state.sessionGains.weakCleared + '問攻略しました。</div>';
+    }
+
+    el.innerHTML = html;
+  }
+
+  function appendGrowthHtml(extraHtml) {
+    document.getElementById('qz-growth-panel').innerHTML += extraHtml;
+  }
+
+  /* ---------------- Stage result screen ---------------- */
+
+  function showStageResult() {
+    showScreen('result');
+    var total = state.order.length;
+    var pct = total > 0 ? Math.round((state.score / total) * 100) : 0;
+
+    document.getElementById('qz-result-big').textContent = state.score + ' / ' + total;
+    document.getElementById('qz-result-pct').textContent = '正解率 ' + pct + '%';
+    document.getElementById('qz-combo-stat').textContent =
+      state.maxStreak >= 2 ? '最高コンボ: ' + state.maxStreak + '連続正解' : '';
+    renderStamp(pct);
+    renderReviewList();
+    renderGrowthPanel();
+
+    var titleEl = document.getElementById('qz-stageresult-title');
+    var eyebrowEl = document.getElementById('qz-stageresult-eyebrow');
+    var actionsEl = document.getElementById('qz-result-actions');
+    actionsEl.innerHTML = '';
+
+    var stageNum = (state.stageIdxPlaying != null) ? state.stages[state.stageIdxPlaying].number : null;
+    var wrongQs = state.log.filter(function (e) { return !e.isCorrect; }).map(function (e) { return e.question; });
+
+    // common: goal lines apply regardless of review/normal mode
+    var goalLines = buildGoalLines();
+    if (goalLines.length > 0) {
+      var goalHtml = '<div class="qz-growth-goal-heading">次の目標</div>';
+      goalLines.forEach(function (g) { goalHtml += '<div class="qz-growth-line">・' + escapeHtml(g) + '</div>'; });
+      appendGrowthHtml(goalHtml);
+    }
+
+    if (state.isReviewMode) {
+      eyebrowEl.textContent = 'REVIEW RESULT';
+      titleEl.textContent = state.reviewLabel + 'の結果';
+      titleEl.className = 'qz-stageresult-title';
+      addActionButton(actionsEl, 'ステージ選択に戻る', 'qz-btn-ghost', goToStageMap);
+      if (wrongQs.length > 0) {
+        addActionButton(actionsEl, 'もう一度この問題を復習する', 'qz-btn-primary', function () {
+          startStagePlay(wrongQs, { isReviewMode: true, reviewLabel: state.reviewLabel });
+        });
+      }
+      saveProfile(state.playerKey, state.profile);
+      if (state.setFingerprint) saveFileData(state.playerKey, state.setFingerprint, state.fileData);
+      return;
+    }
+
+    var threshold = Math.ceil(total * 0.8);
+    var isClear = state.score >= threshold;
+    var isLastStage = state.stageIdxPlaying != null && state.stageIdxPlaying === state.stages.length - 1;
+
+    var historyEntry = state.fileData.stageHistory[stageNum];
+    var prevLast = historyEntry && historyEntry.last;
+    var prevBest = historyEntry && historyEntry.best;
+    var growthExtra = '';
+    if (prevLast && state.score > prevLast.score) {
+      growthExtra += '<div class="qz-growth-line highlight">前回(' + prevLast.score + '問)より+' + (state.score - prevLast.score) + '問アップ!</div>';
+    }
+    if (!prevBest || pct > prevBest.pct) {
+      growthExtra += '<div class="qz-growth-line highlight">このステージの自己ベストを更新しました!</div>';
+    }
+    if (growthExtra) appendGrowthHtml(growthExtra);
+    state.fileData.stageHistory[stageNum] = {
+      last: { score: state.score, total: total, pct: pct },
+      best: (!prevBest || pct > prevBest.pct) ? { score: state.score, total: total, pct: pct } : prevBest
+    };
+
+    if (isClear) {
+      var bonus = EXP_STAGE_CLEAR + (pct === 100 ? EXP_PERFECT_BONUS : 0);
+      state.profile.exp += bonus;
+      state.sessionGains.exp += bonus;
+      if (pct === 100) state.profile.everPerfectClear = true;
+      state.profile.anyStageClearedEver = true;
+      checkAndAwardTitles();
+      renderGrowthPanel(); // re-render to include the clear bonus + any newly awarded titles
+      if (growthExtra) appendGrowthHtml(growthExtra);
+      var goalHtml2 = '';
+      if (goalLines.length > 0) {
+        goalHtml2 += '<div class="qz-growth-goal-heading">次の目標</div>';
+        goalLines.forEach(function (g) { goalHtml2 += '<div class="qz-growth-line">・' + escapeHtml(g) + '</div>'; });
+      }
+      if (goalHtml2) appendGrowthHtml(goalHtml2);
+
+      var prevBestForClear = state.fileData.cleared[stageNum];
+      if (!prevBestForClear || pct > prevBestForClear.pct) {
+        state.fileData.cleared[stageNum] = { score: state.score, total: total, pct: pct };
+      }
+      eyebrowEl.textContent = isLastStage ? 'ALL STAGE CLEAR' : 'STAGE CLEAR';
+      titleEl.textContent = isLastStage ? ('ステージ' + stageNum + ' クリア! 全ステージクリアです!') : ('ステージ' + stageNum + ' クリア!');
+      titleEl.className = 'qz-stageresult-title clear';
+
+      if (!isLastStage) {
+        addActionButton(actionsEl, '次のステージへ', 'qz-btn-primary', function () {
+          var nextIdx = state.stageIdxPlaying + 1;
+          var qs = state.shuffleWithinStage ? shuffleArray(state.stages[nextIdx].questions) : state.stages[nextIdx].questions.slice();
+          startStagePlay(qs, { stageIdx: nextIdx, isReviewMode: false });
+        });
+      }
+      addActionButton(actionsEl, 'もう一度このステージへ', 'qz-btn-ghost', retrySameStage);
+      addActionButton(actionsEl, 'ステージ選択に戻る', 'qz-btn-ghost', goToStageMap);
+    } else {
+      eyebrowEl.textContent = 'STAGE RESULT';
+      titleEl.textContent = 'ステージ' + stageNum + ' クリアならず';
+      titleEl.className = 'qz-stageresult-title fail';
+      addActionButton(actionsEl, 'もう一度挑戦', 'qz-btn-primary', retrySameStage);
+      addActionButton(actionsEl, 'ステージ選択に戻る', 'qz-btn-ghost', goToStageMap);
+    }
+
+    if (wrongQs.length > 0) {
+      addActionButton(actionsEl, '間違えた問題だけ復習(' + wrongQs.length + '問)', 'qz-btn-ghost', function () {
+        startStagePlay(wrongQs, { isReviewMode: true, reviewLabel: '間違えた問題の復習' });
+      });
+    }
+    var recList = getUnclearedWeak();
+    if (recList.length > 0) {
+      addActionButton(actionsEl, 'おすすめ復習を始める(' + Math.min(5, recList.length) + '問)', 'qz-btn-ghost', function () {
+        recList.sort(function (a, b) { return (b.missCount - a.missCount) || (b.lastMissedAt - a.lastMissedAt); });
+        startStagePlay(recList.slice(0, 5), { isReviewMode: true, reviewLabel: 'おすすめ復習' });
+      });
+    }
+
+    saveProfile(state.playerKey, state.profile);
+    if (state.setFingerprint) saveFileData(state.playerKey, state.setFingerprint, state.fileData);
+  }
+})();
+</script>
